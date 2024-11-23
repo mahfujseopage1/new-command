@@ -2,14 +2,15 @@
   "name": "pupdev",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node main.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sparticuz/chromium": "^131.0.0",
     "chrome-aws-lambda": "^10.1.0",
     "cors": "^2.8.5",
     "express": "^4.21.1",

@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer-core';
-import chromium from 'chrome-aws-lambda';
+import chromium from '@sparticuz/chromium';
 
 export const takeScreenshot = async (body) => {
   try {
@@ -9,18 +9,21 @@ export const takeScreenshot = async (body) => {
         width: body?.width || 1200,
         height: body?.height || 800,
       },
-      executablePath: await chromium.executablePath, // Use chrome-aws-lambda's executable path
+      executablePath: await chromium.executablePath, 
       args: [
-        ...chromium.args, // Use the optimized arguments from chrome-aws-lambda
+        ...chromium.args, 
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-web-security', // For cross-origin handling
+        '--disable-web-security',
+        '--disable-gpu',
+        '--single-process',
       ],
     });
 
     const page = await browser.newPage();
     await page.goto(body.url, { waitUntil: 'networkidle2' });
 
+    // Handle scrolling
     await page.evaluate(async () => {
       await new Promise((resolve) => {
         let totalHeight = 0;
@@ -37,13 +40,14 @@ export const takeScreenshot = async (body) => {
       });
     });
 
-    // Capture the screenshot as a base64 string instead of a buffer
+    // Capture the screenshot as base64
     const screenshotBase64 = await page.screenshot({ fullPage: true, encoding: 'base64' });
 
-    // Return the base64-encoded image data
+    await browser.close();
+
     return screenshotBase64;
   } catch (error) {
     console.error("Error taking screenshot:", error);
-    return null; // or throw the error
+    return null;
   }
 };
