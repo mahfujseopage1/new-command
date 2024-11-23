@@ -21,11 +21,16 @@ app.get('/', (req, res) => {
 
 app.post('/take-screenshot', async (req, res) => {
   const body = req.body
-  const data = await takeScreenshot(body);
-  console.log(data)
-  res.json({ message: 'Screenshot taken', status: 200, data: data });
+  const screenshotBase64 = await takeScreenshot(body);
+
+  console.log("come")
+  if (screenshotBase64) {
+    return res.json({ message: 'Screenshot takens', data: screenshotBase64 });
+  } else {
+    return res.status(500).json({ message: 'Failed to capture screenshot' });
+  }
 })
 
-app.listen(5000, () => {
-  console.log('Server is running on port 5000');
+app.listen(6000, () => {
+  console.log('Server is running on port 6000');
 });

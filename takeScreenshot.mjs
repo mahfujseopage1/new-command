@@ -9,12 +9,11 @@ export const takeScreenshot = async (body) => {
         width: body?.width || 1200,
         height: body?.height || 800,
       },
-      executablePath: await chromium.executablePath,  // Get the correct path from sparticuz/chromium
+      executablePath: chromium.executablePath || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', // Add path for Chrome if available
       args: [
-        ...chromium.args,  // Use the optimized args for serverless environments
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-web-security', // For cross-origin handling
+        '--disable-web-security',
         '--disable-gpu',
         '--single-process',
       ],
@@ -23,7 +22,6 @@ export const takeScreenshot = async (body) => {
     const page = await browser.newPage();
     await page.goto(body.url, { waitUntil: 'networkidle2' });
 
-    // Handle scrolling
     await page.evaluate(async () => {
       await new Promise((resolve) => {
         let totalHeight = 0;
@@ -40,14 +38,13 @@ export const takeScreenshot = async (body) => {
       });
     });
 
-    // Capture the screenshot as base64
     const screenshotBase64 = await page.screenshot({ fullPage: true, encoding: 'base64' });
 
     await browser.close();
 
     return screenshotBase64;
   } catch (error) {
-    console.error("Error taking screenshot:", error);
+    console.error('Error taking screenshot:', error);
     return null;
   }
 };
