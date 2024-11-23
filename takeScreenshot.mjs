@@ -10,17 +10,16 @@ async function getBrowser() {
   try {
     let browser;
     if (process.env.NODE_ENV === 'production') {
-      // In production, use the sparticuz/chromium-min to fetch Chromium from the URL
+
       const executablePath = await chromium.executablePath(CHROMIUM_PATH);
 
-      // Launch Puppeteer with the extracted Chromium
       browser = await puppeteer.launch({
         headless: true,
         defaultViewport: {
-          width: 1200, // or provide dynamic width like body?.width
-          height: 800, // or provide dynamic height like body?.height
+          width: 1200,
+          height: 800,
         },
-        executablePath,  // Ensure this points to the correct Chromium binary
+        executablePath,
         args: [
           ...chromium.args,
           '--no-sandbox',
@@ -31,8 +30,8 @@ async function getBrowser() {
         ],
       });
     } else {
-      // In development or non-production environments, use local Puppeteer
-      const executablePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';  // Make sure Chrome is installed here
+
+      const executablePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
       browser = await puppeteer.launch({
         executablePath,
         headless: true,
@@ -84,6 +83,9 @@ export const takeScreenshot = async (body) => {
 
     // Capture the screenshot as a base64 string
     const screenshotBase64 = await page.screenshot({ fullPage: true, encoding: 'base64' });
+
+    console.log('Screenshot taken', screenshotBase64.length);
+
 
     await browser.close();
 

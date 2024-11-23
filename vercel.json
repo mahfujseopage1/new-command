@@ -6,6 +6,12 @@
       "use": "@vercel/node"
     }
   ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "main.mjs"
+    }
+  ],
   "env": {
     "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
     "CHROME_BIN": "/opt/node_modules/@sparticuz/chromium/dist/chrome-linux/chrome"
