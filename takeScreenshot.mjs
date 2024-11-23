@@ -9,12 +9,12 @@ export const takeScreenshot = async (body) => {
         width: body?.width || 1200,
         height: body?.height || 800,
       },
-      executablePath: await chromium.executablePath, 
+      executablePath: await chromium.executablePath,  // Get the correct path from sparticuz/chromium
       args: [
-        ...chromium.args, 
+        ...chromium.args,  // Use the optimized args for serverless environments
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-web-security',
+        '--disable-web-security', // For cross-origin handling
         '--disable-gpu',
         '--single-process',
       ],
